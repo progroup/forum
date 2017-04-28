@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				".idea",
+				"node_modules",
+				"vendor"
+			],
+			"path": "."
+		}
+	]
+}
