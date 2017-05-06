@@ -1,32 +1,36 @@
 <script>
-export default {
-    props: ['attributes'],
+    import Favorite from './Favorite.vue';
 
-    data() {
-        return {
-            editing: false,
-            body: this.attributes.body
-        };
-    },
+    export default {
+        props: ['attributes'],
 
-    methods: {
-        update() {
-            axios.patch('/replies/' + this.attributes.id, {
-                body: this.body
-            });
+        components: { Favorite },
 
-            this.editing = false;
-
-            flash('Updated!');
+        data() {
+            return {
+                editing: false,
+                body: this.attributes.body
+            };
         },
 
-        destroy() {
-            axios.delete('/replies/' + this.attributes.id);
+        methods: {
+            update() {
+                axios.patch('/replies/' + this.attributes.id, {
+                    body: this.body
+                });
 
-            $(this.$el).fadeOut(300, () => {
-                flash('Your reply has been deleted.');
-            });
+                this.editing = false;
+
+                flash('Updated!');
+            },
+
+            destroy() {
+                axios.delete('/replies/' + this.attributes.id);
+
+                $(this.$el).fadeOut(300, () => {
+                    flash('Your reply has been deleted.');
+                });
+            }
         }
     }
-}
 </script>
