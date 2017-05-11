@@ -15,10 +15,13 @@
 
     <!-- Scripts -->
     <script>
-        window.Laravel = {!! json_encode([
+        window.App = {!! json_encode([
             'csrfToken' => csrf_token(),
+            'user' => Auth::user(),
+            'signedIn' => Auth::check()
         ]) !!};
     </script>
+
     <style>
         body { padding-bottom: 100px; }
         .level { display: flex; align-items: center; }
@@ -27,16 +30,16 @@
         [v-cloak] { display: none; }
     </style>
 </head>
-<body style="padding-bottom: 100px">
-    <div id="app">
-        @include('layouts.nav')
+<body>
+<div id="app">
+    @include ('layouts.nav')
 
-        @yield('content')
+    @yield('content')
 
-        <flash message="{{ session('flash') }}"></flash>
-    </div>
+    <flash message="{{ session('flash') }}"></flash>
+</div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

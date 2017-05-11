@@ -7,11 +7,9 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
-try {
-    window.$ = window.jQuery = require('jquery');
+window.$ = window.jQuery = require('jquery');
 
-    require('bootstrap-sass');
-} catch (e) {}
+require('bootstrap-sass');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -21,6 +19,13 @@ try {
 
 window.Vue = require('vue');
 
+Vue.prototype.authorize = function (handler) {
+    // Additional admin privileges here.
+    let user = window.App.user;
+
+    return user ? handler(user) : false;
+};
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -29,8 +34,10 @@ window.Vue = require('vue');
 
 window.axios = require('axios');
 
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common = {
+    'X-CSRF-TOKEN': window.App.csrfToken,
+    'X-Requested-With': 'XMLHttpRequest'
+};
 
 window.events = new Vue();
 
