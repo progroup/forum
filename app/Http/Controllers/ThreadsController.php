@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
+    /**
+     * ThreadsController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
@@ -17,6 +20,8 @@ class ThreadsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Channel      $channel
+     * @param ThreadFilters $filters
      * @return \Illuminate\Http\Response
      */
     public function index(Channel $channel, ThreadFilters $filters)
@@ -25,7 +30,7 @@ class ThreadsController extends Controller
 
         if (request()->wantsJson()) {
             return $threads;
-        };
+        }
 
         return view('threads.index', compact('threads'));
     }
@@ -43,17 +48,15 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
             'channel_id' => 'required|exists:channels,id'
-
         ]);
 
         $thread = Thread::create([
@@ -64,23 +67,28 @@ class ThreadsController extends Controller
         ]);
 
         return redirect($thread->path())
-            ->with('flash', 'Your thread has been published!');;
+            ->with('flash', 'Your thread has been published!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  integer     $channel
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function show($channel, Thread $thread)
     {
-        return view('threads.show', [
-             'thread' => $thread,
-             'replies' => $thread->replies()->paginate(20)
-        ]);
+        return view('threads.show', compact('thread'));
     }
 
+    /**
+     * Delete the given thread.
+     *
+     * @param        $channel
+     * @param Thread $thread
+     * @return mixed
+     */
     public function destroy($channel, Thread $thread)
     {
         $this->authorize('update', $thread);
@@ -108,6 +116,7 @@ class ThreadsController extends Controller
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);
         }
+
         return $threads->get();
     }
 }
